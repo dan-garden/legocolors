@@ -1,5 +1,5 @@
 {
-  "name": "legocolors",
+  "name": "@dan-garden/legocolors",
   "version": "0.0.0",
   "type": "module",
   "main": "build/src/main.js",
