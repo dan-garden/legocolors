@@ -1,5 +1,5 @@
 import Colors_Base from "./providers/Colors_Base.js";
-// import Colors_Rebrickable from "./providers/Colors_Rebrickable.js";
+import Colors_Rebrickable from "./providers/Colors_Rebrickable.js";
 import Colors_RyanHowerter from "./providers/Colors_RyanHowerter.js";
 import { Color } from "../src/main.js";
 
@@ -10,7 +10,7 @@ class UpdateColors {
     constructor() {
         this.providers = [
             Colors_Base,
-            // Colors_Rebrickable,
+            Colors_Rebrickable,
             Colors_RyanHowerter
         ];
 
@@ -25,7 +25,7 @@ class UpdateColors {
                 const colors = await provider.getColors();
                 colors.forEach((color: Color) => {
                     const existingColor = this.colors.find(c => {
-                        return c.id === color.id;
+                        return c.id === color.id || (c.keys.slug === color.keys.slug);
                     });
 
                     if (existingColor) {

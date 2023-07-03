@@ -34,8 +34,7 @@ class Colors_RyanHowerter extends Colors_Base {
                         constant: constantCase(name),
                         snake: snakeCase(name),
                         id: parseInt($cells.eq(1).text().trim()),
-                        // slug from name
-                        slug: snakeCase(name).toLocaleLowerCase().replace(/-/g, '\\-')
+                        slug: snakeCase(name).toLocaleLowerCase().split('_').join('-')
                     };
 
                     const type = $cells.eq(0).text().trim();

@@ -40,7 +40,7 @@ class Colors_Rebrickable extends Colors_Base {
                 constant: constantCase(colorData.name),
                 snake: snakeCase(colorData.name),
                 id: legoId,
-                slug: snakeCase(colorData.name).toLocaleLowerCase().replace(/-/g, '\\-')
+                slug: snakeCase(colorData.name).toLocaleLowerCase().split('_').join('-')
             };
 
 
