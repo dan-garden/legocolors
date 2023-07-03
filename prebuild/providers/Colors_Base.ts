@@ -25,7 +25,7 @@ class Colors_Base {
 
     static async writeFile(colors: { unique: Color[]; all: {}; }) {
         return new Promise<void>(async (resolve) => {
-            fs.writeFile('src/colors.json', JSON.stringify(colors, null, 4), 'utf8', () => {
+            fs.writeFile('src/colors.json', JSON.stringify(colors), 'utf8', () => {
                 resolve();
             });
         });

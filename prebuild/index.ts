@@ -58,4 +58,5 @@ const updateColors = new UpdateColors();
 updateColors.buildColorJSON().then(() => {
     const colors = Colors_Base.buildColorKeys(updateColors.colors);
     Colors_Base.writeFile(colors);
+    console.log("Colors updated");
 });
