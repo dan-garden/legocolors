@@ -1,34 +1,132 @@
-/**
- * Some predefined delay values (in milliseconds).
- */
-export enum Delays {
-  Short = 500,
-  Medium = 2000,
-  Long = 5000,
+import colors from './colors.json' assert { type: "json" };
+import shadesOf from './lib/tailwind-shades.js';
+import tinycolor from 'tinycolor2';
+
+export type RGBA = {
+    r: number;
+    g: number;
+    b: number;
+    a: number;
 }
 
-/**
- * Returns a Promise<string> that resolves after a given time.
- *
- * @param {string} name - A name.
- * @param {number=} [delay=Delays.Medium] - A number of milliseconds to delay resolution of the Promise.
- * @returns {Promise<string>}
- */
-function delayedHello(
-  name: string,
-  delay: number = Delays.Medium,
-): Promise<string> {
-  return new Promise((resolve: (value?: string) => void) =>
-    setTimeout(() => resolve(`Hello, ${name}`), delay),
-  );
+export type ExternalIDType = {
+    ext_ids: Array<string | number>
 }
 
-// Please see the comment in the .eslintrc.json file about the suppressed rule!
-// Below is an example of how to use ESLint errors suppression. You can read more
-// at https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export async function greeter(name: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-  // The name parameter should be of type string. Any is used only to trigger the rule.
-  return await delayedHello(name, Delays.Long);
+export type Keys = {
+    camel: string;
+    constant: string;
+    snake: string;
+    id: number | string;
+    slug: string;
 }
+
+export type Color = {
+    id: number | string;
+    name: string;
+    type: string;
+    slug: string;
+    keys: Keys;
+    hex: string;
+    rgb: RGBA | tinycolor.ColorFormats.RGBA;
+    externalIds: {
+        BrickLink?: ExternalIDType;
+        BrickOwl?: ExternalIDType;
+        LDraw?: ExternalIDType;
+        LEGO?: ExternalIDType;
+        Peeron?: ExternalIDType;
+        Rebrickable?: ExternalIDType;
+    };
+}
+
+class Colors {
+    colors: { [key: string|number]: Color };
+    colorsArray: Color[];
+
+    constructor() {
+        this.colors = colors.all;
+        this.colorsArray = colors.unique;
+    }
+
+    getColors(): {
+        [key: string]: Color;
+        [key: number]: Color;
+    } {
+        return this.colors;
+    }
+
+    getTailwind(): {
+        [key: string]: {
+            DEFAULT: string;
+            50: string;
+            100: string;
+            200: string;
+            300: string;
+            400: string;
+            500: string;
+            600: string;
+            700: string;
+            800: string;
+            900: string;
+        };
+    } {
+        const colors = {};
+        const caseKey = 'camel';
+        
+        this.colorsArray.forEach(color => {
+            colors[`${color.keys[caseKey]}`] = {
+                DEFAULT: color.hex,
+                ...shadesOf(color.hex)
+            }
+        });
+
+        return colors;
+    }
+
+    getColor(name: string): Color {
+        return this.colorsArray.find(color => {
+            return color.name.toLocaleLowerCase() === name.toLocaleLowerCase();
+        });
+    }
+
+    getUniqueColors(): Color[] {
+        return this.colorsArray;
+    }
+
+    getById(id: string | number): Color {
+        return this.colorsArray.find(color => {
+            return color.id === id;
+        });
+    }
+
+    getByLegoId(id: number): Color {
+        return this.getById(id);
+    }
+
+    getByRebrickableId(id: number): Color {
+        return this.colorsArray.find(color => {
+            return color?.externalIds?.Rebrickable?.ext_ids.includes(id);
+        });
+    }
+
+    getByLDrawId(id: number): Color {
+        return this.colorsArray.find(color => {
+            return color?.externalIds?.LDraw?.ext_ids.includes(id);
+        });
+    }
+
+    getByBrickLinkId(id: number): Color {
+        return this.colorsArray.find(color => {
+            return color?.externalIds?.BrickLink?.ext_ids.includes(id);
+        });
+    }
+
+    getByBrickOwlId(id: number): Color {
+        return this.colorsArray.find(color => {
+            return color?.externalIds?.BrickOwl?.ext_ids.includes(id);
+        });
+    }
+}
+
+const ColorsInstance = new Colors();
+export default ColorsInstance;
