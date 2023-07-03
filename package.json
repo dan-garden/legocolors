@@ -33,6 +33,7 @@
   "scripts": {
     "clean": "rimraf coverage build tmp",
     "prebuild": "npm run update-colors && npm run lint",
+    "prepublishOnly": "npm run build",
     "update-colors": "ts-node --esm prebuild/index.ts",
     "build": "tsc -p tsconfig.json",
     "build:watch": "tsc -w -p tsconfig.json",
