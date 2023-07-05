@@ -25,15 +25,23 @@ class Colors_RyanHowerter extends Colors_Base {
                     const name = $cells.eq(4).text().trim();
                     const colorHex = $cells.eq(13).text().trim();
                     
-                    if(!name || !colorHex) return;
+                    if(!name) return;
+
                     
                     const color = tinycolor(colorHex);
+                    let id:string|number = $cells.eq(1).text().trim();
+
+                    if(name.toLowerCase().startsWith("mx")) {
+                        id = 'mx-' + id;
+                    } else {
+                        id = parseInt(id);
+                    }
 
                     const cases = {
                         camel: camelCase(name),
                         constant: constantCase(name),
                         snake: snakeCase(name),
-                        id: parseInt($cells.eq(1).text().trim()),
+                        id,
                         slug: snakeCase(name).toLocaleLowerCase().split('_').join('-')
                     };
 
@@ -47,8 +55,8 @@ class Colors_RyanHowerter extends Colors_Base {
                         slug: cases.slug,
                         type: type,
                         keys: cases,
-                        hex: color.toHexString(),
-                        rgb: { ...color.toRgb() },
+                        hex: colorHex ? color.toHexString() : "",
+                        rgb: colorHex ? { ...color.toRgb() } : "",
                         externalIds: {
                             BrickLink: {
                                 ext_ids: [bricklinkId]

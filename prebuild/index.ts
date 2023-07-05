@@ -22,10 +22,13 @@ class UpdateColors {
 
             for(let i = 0; i < this.providers.length; i++) {
                 const provider = this.providers[i];
-                const colors = await provider.getColors();
+                let colors = await provider.getColors();
                 colors.forEach((color: Color) => {
+                    color.type = color?.type.toLocaleLowerCase() || "solid";
+
                     const existingColor = this.colors.find(c => {
-                        return c.id === color.id || (c.keys.slug === color.keys.slug);
+                        return c.id === color.id
+                            || c.name.toLocaleLowerCase().trim() === color.name.toLocaleLowerCase().trim();
                     });
 
                     if (existingColor) {
@@ -46,6 +49,34 @@ class UpdateColors {
                     } else {
                         this.colors.push(color);
                     }
+                });
+
+                colors = colors.map((color: Color) => {
+
+                    if(color.name.startsWith("Glitter")) {
+                        color.type = "glitter";
+                    }
+
+                    if(color.name.startsWith("Satin")) {
+                        color.type = "satin";
+                    }
+
+                    const missingTypes = ["satin", "glitter"];
+
+                    if(missingTypes.includes(color.type) && !color.hex) {
+                        const nameWithoutType = color.name.toLowerCase().replace(color.type, "").trim();
+                        const existingColor = this.colors.find(c => {
+                            return c.id === color.id
+                                || c.name.toLocaleLowerCase().trim() === nameWithoutType;
+                        });
+                        
+                        if(existingColor) {
+                            color.hex = existingColor.hex;
+                            color.rgb = existingColor.rgb;
+                        }
+                    }
+
+                    return color;
                 });
             }
 

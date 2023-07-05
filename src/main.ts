@@ -32,7 +32,7 @@ export type Color = {
     slug: string;
     keys: Keys;
     hex: string;
-    rgb: RGBA | tinycolor.ColorFormats.RGBA;
+    rgb: RGBA | tinycolor.ColorFormats.RGBA | string;
     externalIds: {
         BrickLink?: ExternalIDType;
         BrickOwl?: ExternalIDType;
@@ -48,6 +48,23 @@ class Colors {
     colorsArray: Color[];
 
     constructor() {
+        this.colors = colors.all;
+        this.colorsArray = colors.unique;
+    }
+
+    async loadJSON(path: string): Promise<void> {
+        // if is url
+        // if(path.startsWith('http')) {
+
+        // }
+
+        // if is local file
+        const { default: colors } = await import(path + '?d' + Date.now(), {
+            assert: {
+              type: "json",
+            },
+        });
+
         this.colors = colors.all;
         this.colorsArray = colors.unique;
     }
