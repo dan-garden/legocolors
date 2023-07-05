@@ -1,6 +1,10 @@
-import colors from './colors.json' assert { type: "json" };
 import shadesOf from './lib/tailwind-shades.js';
 import tinycolor from 'tinycolor2';
+const { default: colors } = await import("./colors.json", {
+  assert: {
+    type: "json",
+  },
+});
 
 export type RGBA = {
     r: number;

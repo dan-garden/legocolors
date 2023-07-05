@@ -1,6 +1,6 @@
 {
   "name": "@dan-garden/legocolors",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "build/src/main.js",
   "types": "build/src/main.d.ts",
