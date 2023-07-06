@@ -1,5 +1,6 @@
 import shadesOf from './lib/tailwind-shades.js';
 import tinycolor from 'tinycolor2';
+
 const { default: colors } = await import("./colors.json", {
   assert: {
     type: "json",
@@ -29,8 +30,9 @@ export type Color = {
     id: number | string;
     name: string;
     type: string;
-    slug: string;
+    desc?: string;
     keys: Keys;
+    providers?: string[];
     hex: string;
     rgb: RGBA | tinycolor.ColorFormats.RGBA | string;
     externalIds: {
@@ -54,19 +56,20 @@ class Colors {
 
     async loadJSON(path: string): Promise<void> {
         // if is url
-        // if(path.startsWith('http')) {
-
-        // }
-
-        // if is local file
-        const { default: colors } = await import(path + '?d' + Date.now(), {
-            assert: {
-              type: "json",
-            },
-        });
-
-        this.colors = colors.all;
-        this.colorsArray = colors.unique;
+        if(path.startsWith('http') || path.startsWith('https')) {
+            // use axios to get the file
+            // const req = await axios.get(path);
+        } else {
+            // if is local file
+            const { default: colors } = await import(path + '?d' + Date.now(), {
+                assert: {
+                  type: "json",
+                },
+            });
+    
+            this.colors = colors.all;
+            this.colorsArray = colors.unique;
+        }
     }
 
     getColors(): {

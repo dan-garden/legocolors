@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { Color } from '../../src/main.js';
 
 class Colors_Base {
@@ -8,27 +7,19 @@ class Colors_Base {
         });
     }
 
-    static buildColorKeys(colorArray: Color[]) {
-        const colors = {
-            unique: colorArray,
-            all: Object.fromEntries(colorArray.map(color => [color.id, color]))
-        };
-        
-        colorArray.forEach(color => {
-            Object.values(color.keys).forEach((key: string | number) => {
-                colors.all[key] = color;
-            });
-        });
+    static extractParenthesis(str: string): {
+        extracted: string;
+        replaced: string;
+    } {
+        const regex = /\((.*?)\)/g;
+        const match = regex.exec(str);
+        const extracted = match ? match[1] : "";
 
-        return colors;
-    }
-
-    static async writeFile(colors: { unique: Color[]; all: {}; }) {
-        return new Promise<void>(async (resolve) => {
-            fs.writeFile('src/colors.json', JSON.stringify(colors, null, 4), 'utf8', () => {
-                resolve();
-            });
-        });
+        return {
+            extracted,
+            // replaced: str,
+            replaced: str.replace(regex, "").trim()
+        }
     }
 }
 

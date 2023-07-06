@@ -22,20 +22,26 @@ class Colors_RyanHowerter extends Colors_Base {
                     const $row = $(row);
                     const $cells = $row.find('>td');
                     
-                    const name = $cells.eq(4).text().trim();
+                    let name = $cells.eq(4).text().trim();
+                    const notes = $cells.eq(12).text().trim();
                     const colorHex = $cells.eq(13).text().trim();
                     
                     if(!name) return;
-
                     
                     const color = tinycolor(colorHex);
                     let id:string|number = $cells.eq(1).text().trim();
 
                     if(name.toLowerCase().startsWith("mx")) {
                         id = 'mx-' + id;
+                        name = name.replace("Mx", "Modulex");
                     } else {
                         id = parseInt(id);
                     }
+
+                    const extract = this.extractParenthesis(name);
+                    name = extract.replaced;
+
+                    const desc = notes || extract.extracted;
 
                     const cases = {
                         camel: camelCase(name),
@@ -52,9 +58,10 @@ class Colors_RyanHowerter extends Colors_Base {
                     const data = {
                         id: cases.id,
                         name: name,
-                        slug: cases.slug,
+                        desc: desc,
                         type: type,
                         keys: cases,
+                        providers: ["RyanHowerter"],
                         hex: colorHex ? color.toHexString() : "",
                         rgb: colorHex ? { ...color.toRgb() } : "",
                         externalIds: {

@@ -23,6 +23,7 @@ class Colors_Rebrickable extends Colors_Base {
             name: string;
             is_trans: boolean;
         }) => {
+
             if(colorData.id < 0) {
                 return false;
             }
@@ -34,6 +35,11 @@ class Colors_Rebrickable extends Colors_Base {
             if(legoId === undefined) {
                 return false;
             }
+
+            const extract = this.extractParenthesis(colorData.name);
+            colorData.name = extract.replaced;
+
+            const desc = extract.extracted;
 
             const cases = {
                 camel: camelCase(colorData.name),
@@ -47,10 +53,10 @@ class Colors_Rebrickable extends Colors_Base {
             const data = {
                 id: cases.id,
                 name: colorData.name,
-                slug: cases.slug,
-                type: colorData?.is_trans === true ? 'Transparent' : 'Solid',
-                // isTransparent: colorData?.is_trans === true ? true : false,
+                desc: desc,
+                type: colorData?.is_trans === true ? 'transparent' : 'solid',
                 keys: cases,
+                providers: ["Rebrickable"],
                 hex: color.toHexString(),
                 rgb: { ...color.toRgb() },
                 externalIds: {
